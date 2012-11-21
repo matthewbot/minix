@@ -446,6 +446,7 @@ PUBLIC int req_lookup(
 	  res->dev = m.RES_DEV;
 	  res->uid= m.RES_UID;
 	  res->gid= m.RES_GID;
+	  res->hasacl = m.RES_HASACL;
 	  break;
   case EENTERMOUNT:
 	  res->inode_nr = m.RES_INODE_NR;
@@ -1090,4 +1091,46 @@ time_t modtime;
 
   /* Send/rec request */
   return fs_sendrec(fs_e, &m);
+}
+
+PUBLIC int req_getacl(fs_e, inode_nr, res)
+endpoint_t fs_e;
+ino_t inode_nr;
+acl_data_t *res;
+{
+  message m;
+  cp_grant_id_t grant_id;
+  int r;
+
+  grant_id = cpf_grant_direct(fs_e, (vir_bytes)res,
+                              sizeof(acl_data_t), CPF_WRITE);
+
+  m.m_type = REQ_GETACL;
+  m.REQ_INODE_NR = inode_nr;
+  m.REQ_GRANT = grant_id;
+
+  r = fs_sendrec(fs_e, &m);
+  cpf_revoke(grant_id);
+  return(r);
+}
+
+PUBLIC int req_setacl(fs_e, inode_nr, data)
+endpoint_t fs_e;
+ino_t inode_nr;
+acl_data_t *data;
+{
+  message m;
+  cp_grant_id_t grant_id;
+  int r;
+
+  grant_id = cpf_grant_direct(fs_e, (vir_bytes)data,
+                              sizeof(acl_data_t), CPF_READ);
+
+  m.m_type = REQ_SETACL;
+  m.REQ_INODE_NR = inode_nr;
+  m.REQ_GRANT = grant_id;
+
+  r = fs_sendrec(fs_e, &m);
+  cpf_revoke(grant_id);
+  return(r);
 }

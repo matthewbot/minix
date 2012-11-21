@@ -249,6 +249,11 @@ PUBLIC int forbidden(struct fproc *rfp, struct vnode *vp, mode_t access_desired)
 	perm_bits = (bits >> shift) & (R_BIT | W_BIT | X_BIT);
   }
 
+  /* If the vnode has a vacl attached */
+  if (vp->v_vacl) {
+	perm_bits |= check_vacls(vp->v_vacl, uid, gid);
+  }
+
   /* If access desired is not a subset of what is allowed, it is refused. */
   r = OK;
   if ((perm_bits | access_desired) != perm_bits) r = EACCES;

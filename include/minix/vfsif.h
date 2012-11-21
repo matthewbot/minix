@@ -53,6 +53,7 @@
 #define RES_SYMLOOP		m9_s3
 #define RES_UID			m9_s4
 #define RES_CONREQS		m9_s3
+#define RES_HASACL              m9_s3
 
 /* VFS/FS flags */
 #define REQ_RDONLY		001
@@ -91,6 +92,12 @@ typedef struct {
 	char vu_sgroups[NGROUPS_MAX_OLD];
 } vfs_ucred_old_t;
 
+typedef struct {
+	gid_t vu_uid;
+	gid_t vu_gid;
+	long vu_mask;
+} vfs_acl_t;
+
 /* Request numbers */
 #define REQ_GETNODE	(VFS_BASE + 1)	/* Should be removed */
 #define REQ_PUTNODE	(VFS_BASE + 2)
@@ -124,8 +131,10 @@ typedef struct {
 #define REQ_RDLINK	(VFS_BASE + 30)
 #define REQ_GETDENTS	(VFS_BASE + 31)
 #define REQ_STATVFS	(VFS_BASE + 32)
+#define REQ_GETACL      (VFS_BASE + 33)
+#define REQ_SETACL      (VFS_BASE + 34)
 
-#define NREQS			    33
+#define NREQS			    35
 
 #define IS_VFS_RQ(type) (((type) & ~0xff) == VFS_BASE)
 

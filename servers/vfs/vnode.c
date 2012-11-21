@@ -11,6 +11,7 @@
 #include "fs.h"
 #include "threads.h"
 #include "vnode.h"
+#include "vacl.h"
 #include "vmnt.h"
 #include "fproc.h"
 #include "file.h"
@@ -96,6 +97,7 @@ PUBLIC struct vnode *get_free_vnode()
 		vp->v_mapfs_e = NONE;
 		vp->v_mapfs_count = 0;
 		vp->v_mapinode_nr = 0;
+		vp->v_vacl = NULL;
 		return(vp);
 	}
   }
@@ -147,6 +149,7 @@ PUBLIC void init_vnodes(void)
 	vp->v_ref_count = 0;
 	vp->v_fs_count = 0;
 	vp->v_mapfs_count = 0;
+	vp->v_vacl = NULL;
 	tll_init(&vp->v_lock);
   }
 }
@@ -286,6 +289,8 @@ PUBLIC void put_vnode(struct vnode *vp)
   vp->v_fs_count = 0;
   vp->v_ref_count = 0;
   vp->v_mapfs_count = 0;
+  if (vp->v_vacl)
+	vp->v_vacl->a_node = NULL;
 
   unlock_vnode(vp);
 }

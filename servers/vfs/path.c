@@ -19,6 +19,7 @@
 #include "threads.h"
 #include "vmnt.h"
 #include "vnode.h"
+#include "vacl.h"
 #include "path.h"
 #include "fproc.h"
 #include "param.h"
@@ -53,6 +54,7 @@ struct fproc *rfp;
   struct vmnt *vmp;
   struct node_details res = {0,0,0,0,0,0,0};
   tll_access_t initial_locktype;
+  acl_data_t acl;
 
   assert(dirp);
   assert(resolve->l_vnode_lock != TLL_NONE);
@@ -108,6 +110,17 @@ struct fproc *rfp;
 
 	if( (vmp = find_vmnt(new_vp->v_fs_e)) == NULL)
 		  panic("advance: vmnt not found");
+
+	if (res.hasacl) {
+		new_vp->v_vacl = get_free_vacl();
+		new_vp->v_vacl->a_node = new_vp;
+		req_getacl(new_vp->v_fs_e, new_vp->v_inode_nr, &acl);
+		for (int i=0; i<NR_VACLNODES;i++) {
+			new_vp->v_vacl->a_nodes[i].an_uid = acl.uids[i];
+			new_vp->v_vacl->a_nodes[i].an_gid = acl.gids[i];
+			new_vp->v_vacl->a_nodes[i].an_mode = acl.modes[i];
+		}
+	}
 
 	new_vp->v_vmnt = vmp;
 	new_vp->v_dev = vmp->m_dev;
@@ -510,6 +523,7 @@ struct fproc *rfp;
   result_node->fs_e = res.fs_e;
   result_node->uid = res.uid;
   result_node->gid = res.gid;
+  result_node->hasacl = res.hasacl;
 
   return(r);
 }

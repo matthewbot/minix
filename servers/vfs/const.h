@@ -7,6 +7,8 @@
 #define NR_MNTS           16 	/* # slots in mount table */
 #define NR_VNODES        512	/* # slots in vnode table */
 #define NR_WTHREADS	   8	/* # slots in worker thread table */
+#define NR_VACLS          128   /* # slots in vacl table */
+#define NR_VACLNODES      16    /* # of vaclnodes in a vacl */
 
 #define NR_NONEDEVS	NR_MNTS	/* # slots in nonedev bitmap */
 

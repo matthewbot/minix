@@ -308,6 +308,7 @@ PUBLIC int fs_lookup(void)
 	fs_m_out.RES_UID = cur_ino->i_stat.uid;
 	fs_m_out.RES_GID = cur_ino->i_stat.gid;
 	fs_m_out.RES_DEV = cur_ino->i_stat.dev;
+	fs_m_out.RES_HASACL = 0;
 
 	return OK;
 }

@@ -26,6 +26,7 @@ EXTERN struct vnode {
   dev_t v_sdev;                 /* device number for special files */
   struct vmnt *v_vmnt;          /* vmnt object of the partition */
   tll_t v_lock;			/* three-level-lock */
+  struct vacl *v_vacl;          /* vacl for this vnode, if it has one */
 } vnode[NR_VNODES];
 
 

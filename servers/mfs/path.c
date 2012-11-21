@@ -104,6 +104,7 @@ PUBLIC int fs_lookup()
   fs_m_out.RES_SYMLOOP		= symlinks;
   fs_m_out.RES_UID		= rip->i_uid;
   fs_m_out.RES_GID		= rip->i_gid;
+  fs_m_out.RES_HASACL          = 0;
   
   /* This is only valid for block and character specials. But it doesn't
    * cause any harm to set RES_DEV always. */

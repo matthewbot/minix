@@ -7,6 +7,7 @@
  */
 
 #include <sys/types.h>
+#include "const.h"
 
 /* Structure for response that contains inode details */
 typedef struct node_details {
@@ -16,6 +17,7 @@ typedef struct node_details {
   off_t fsize;
   uid_t uid;
   gid_t gid;
+  unsigned char hasacl;
 
   /* For char/block special files */
   dev_t dev;
@@ -35,7 +37,15 @@ typedef struct lookup_res {
   /* Fields used for handling mount point and symbolic links */
   int char_processed;
   unsigned char symloop;
+
+  /* Indicates the file has an ACL */
+  unsigned char hasacl;
 } lookup_res_t;
 
+typedef struct acl_data {
+  gid_t gids[NR_VACLNODES];
+  uid_t uids[NR_VACLNODES];
+  mode_t modes[NR_VACLNODES];
+} acl_data_t;
 
 #endif

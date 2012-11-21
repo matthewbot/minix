@@ -1,3 +1,4 @@
+
 #ifndef __VFS_PROTO_H__
 #define __VFS_PROTO_H__
 
@@ -14,6 +15,7 @@ struct filp;
 struct fproc;
 struct vmnt;
 struct vnode;
+struct vacl;
 struct lookup;
 struct worker_thread;
 struct job;
@@ -289,6 +291,8 @@ _PROTOTYPE( int req_utime, (endpoint_t fs_e, ino_t inode_nr,
 					time_t actime, time_t modtime)	);
 _PROTOTYPE( int req_newdriver, (endpoint_t fs_e, dev_t dev,
             char *label)						);
+_PROTOTYPE( int req_getacl, (endpoint_t fs_e, ino_t inode_nr, acl_data_t *res) );
+_PROTOTYPE( int req_setacl, (endpoint_t fs_e, ino_t inode_nr, acl_data_t *data) );
 
 /* stadir.c */
 _PROTOTYPE( int do_chdir, (void)					);
@@ -327,6 +331,12 @@ _PROTOTYPE( int in_group, (struct fproc *rfp, gid_t grp)		);
 
 #define okendpt(e, p) isokendpt_f(__FILE__, __LINE__, (e), (p), 1)
 #define isokendpt(e, p) isokendpt_f(__FILE__, __LINE__, (e), (p), 0)
+
+/* vacl.c */
+_PROTOTYPE( void init_vacls, (void)                                     );
+_PROTOTYPE( struct vacl *get_free_vacl, (void)                          );
+_PROTOTYPE( mode_t check_vacls, (struct vacl *va, uid_t uid, gid_t gid));
+_PROTOTYPE( struct vaclnode *find_vacl_node, (struct vacl *va, uid_t uid, gid_t gid));
 
 /* vmnt.c */
 _PROTOTYPE( void check_vmnt_locks, (void)				);

@@ -329,6 +329,7 @@ PUBLIC int do_lookup()
   m_out.RES_UID = opt.uid;
   m_out.RES_GID = opt.gid;
   m_out.RES_DEV = NO_DEV;
+  m_out.RES_HASACL = 0;
 
   return OK;
 }
